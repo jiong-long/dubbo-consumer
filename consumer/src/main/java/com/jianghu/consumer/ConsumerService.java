@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConsumerService {
 
-    @Reference
+    @Reference(check = false, retries = 4, loadbalance = "LeastActive")
     private ProviderService providerService;
 
     public String initDubbo(String world){
