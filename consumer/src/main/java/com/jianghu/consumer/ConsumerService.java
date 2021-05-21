@@ -18,7 +18,7 @@ public class ConsumerService {
      * loadbalance：负载均衡策略，roundrobin随机
      * version：多版本，*不区分版本
      */
-    @Reference(check = false, retries = 4, loadbalance = "roundrobin" , version = "*")
+    @Reference(check = false, retries = 4, loadbalance = "roundrobin" , version = "*", mock = "true")
     private ProviderService providerService;
 
     public String initDubbo(String world){
