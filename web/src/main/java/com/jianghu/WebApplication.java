@@ -3,6 +3,9 @@ package com.jianghu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author wangjinlong
+ */
 @SpringBootApplication
 public class WebApplication {
 
