@@ -1,9 +1,8 @@
 package com.jianghu.mq.rabbit;
 
-import com.rabbitmq.client.*;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import com.rabbitmq.client.CancelCallback;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
 
 /**
  * @description: rabbitMQ 消费者
@@ -14,20 +13,16 @@ public class Consumer {
 
     private final static String QUEUE_NAME = "queue_name";
 
-    public static void main(String[] args) throws IOException, TimeoutException {
-        //创建连接工厂
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername("guest");
-        factory.setPassword("guest");
-        //设置 RabbitMQ 地址
-        factory.setHost("localhost");
-        //建立到代理服务器到连接
-        Connection conn = factory.newConnection();
-        //获得信道
-        Channel channel = conn.createChannel();
+    public static void main(String[] args) throws Exception {
+        Channel channel = RabbitMqUtils.getChannel();
+
+        // 0：轮询分发（默认）；1：不公平分发；其他：预取值
+        channel.basicQos(1);
 
         DeliverCallback deliverCallback = (consumerTag, message) -> {
             System.out.println(new String(message.getBody()));
+            // 确认收到信息
+            channel.basicAck(message.getEnvelope().getDeliveryTag(), false);
         };
 
         CancelCallback cancelCallback = consumerTag -> {};
