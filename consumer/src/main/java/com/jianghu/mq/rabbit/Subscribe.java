@@ -1,24 +1,29 @@
 package com.jianghu.mq.rabbit;
 
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.CancelCallback;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 
 /**
- * @description: rabbitMQ 消费者
+ * @description: 发布订阅模式---订阅者
  * @author: OF3848
- * @create: 2021-08-05 19:02
+ * @create: 2021-08-06 15:01
  */
-public class Consumer {
+public class Subscribe {
 
-    private final static String QUEUE_NAME = "queue_name";
+    private final static String EXCHANGE_NAME = "exchange_name";
 
     public static void main(String[] args) {
         // 接收消息，不可以直接关闭Channel
         try{
             Channel channel = RabbitMqUtils.getChannel();
-            // 0：轮询分发（默认）；1：不公平分发；其他：预取值
-            channel.basicQos(1);
+            // 声明交换机（分发:发布/订阅模式）
+            channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+            // 声明队列
+            final String queueName = channel.queueDeclare().getQueue();
+            // 将队列绑定到交换机
+            channel.queueBind(queueName, EXCHANGE_NAME, "");
 
             DeliverCallback deliverCallback = (consumerTag, message) -> {
                 System.out.println(new String(message.getBody()));
@@ -28,10 +33,11 @@ public class Consumer {
 
             CancelCallback cancelCallback = consumerTag -> {};
 
-            channel.basicConsume(QUEUE_NAME, false, deliverCallback, cancelCallback);
+            channel.basicConsume(queueName, false, deliverCallback, cancelCallback);
+
+            System.out.println(queueName + "等待接收消息");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
