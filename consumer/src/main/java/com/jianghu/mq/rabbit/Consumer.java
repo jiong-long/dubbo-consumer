@@ -18,6 +18,7 @@ public class Consumer {
         try{
             Channel channel = RabbitMqUtils.getChannel();
             // 0：轮询分发（默认）；1：不公平分发；其他：预取值
+            // 服务器最大消息数
             channel.basicQos(1);
 
             DeliverCallback deliverCallback = (consumerTag, message) -> {
