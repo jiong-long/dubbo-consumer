@@ -1,8 +1,10 @@
 package com.jianghu.web;
 
+import com.jianghu.mq.rabbit.config.ConfirmQueueConfig;
 import com.jianghu.mq.rabbit.config.DelayedQueueConfig;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,5 +76,14 @@ public class RabbitMqController {
         };
         rabbitTemplate.convertAndSend(DelayedQueueConfig.DELAYED_EXCHANGE_NAME, DelayedQueueConfig.DELAYED_ROUTING_KEY,
                 "后发：延迟1000：" + message, messagePostProcessor2);
+    }
+
+    @GetMapping("/sendMsg4")
+    @ApiOperation("发布确认")
+    public void sendMessage4(){
+        String message = "你好啊!!!";
+        CorrelationData correlationData = new CorrelationData("1");
+        rabbitTemplate.convertAndSend(ConfirmQueueConfig.CONFIRM_EXCHANGE_NAME, ConfirmQueueConfig.CONFIRM_ROUTING_KEY,
+                message, correlationData);
     }
 }
