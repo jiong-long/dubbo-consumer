@@ -83,7 +83,15 @@ public class RabbitMqController {
     public void sendMessage4(){
         String message = "你好啊!!!";
         CorrelationData correlationData = new CorrelationData("1");
+        rabbitTemplate.convertAndSend(ConfirmQueueConfig.CONFIRM_EXCHANGE_NAME + "1", ConfirmQueueConfig.CONFIRM_ROUTING_KEY,
+                message + "【发送交换机失败的消息】", correlationData);
+
+        CorrelationData correlationData2 = new CorrelationData("2");
+        rabbitTemplate.convertAndSend(ConfirmQueueConfig.CONFIRM_EXCHANGE_NAME, ConfirmQueueConfig.CONFIRM_ROUTING_KEY + "1",
+                message + "【发送routingKey失败的消息】", correlationData2);
+
+        CorrelationData correlationData3 = new CorrelationData("3");
         rabbitTemplate.convertAndSend(ConfirmQueueConfig.CONFIRM_EXCHANGE_NAME, ConfirmQueueConfig.CONFIRM_ROUTING_KEY,
-                message, correlationData);
+                message + "【成功的消息】", correlationData3);
     }
 }

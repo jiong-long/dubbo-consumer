@@ -14,14 +14,22 @@ import org.springframework.context.annotation.Configuration;
 public class ConfirmQueueConfig {
 
     public static final String CONFIRM_EXCHANGE_NAME = "confirm.exchange";
+    public static final String WARNING_EXCHANGE_NAME = "warning.exchange";
 
     public static final String CONFIRM_QUEUE_NAME = "confirm.queue";
+    public static final String WARNING_QUEUE_NAME = "warning.queue";
 
     public static final String CONFIRM_ROUTING_KEY = "key1";
 
     @Bean
+    public FanoutExchange warningExchange(){
+        return new FanoutExchange(WARNING_EXCHANGE_NAME);
+    }
+
+    @Bean
     public DirectExchange confirmExchange(){
-        return new DirectExchange(CONFIRM_EXCHANGE_NAME);
+        // 定义正常交换机的备份交换机
+        return ExchangeBuilder.directExchange(CONFIRM_EXCHANGE_NAME).withArgument("alternate-exchange", WARNING_EXCHANGE_NAME).build();
     }
 
     @Bean
@@ -30,9 +38,20 @@ public class ConfirmQueueConfig {
     }
 
     @Bean
+    public Queue warningQueue(){
+        return QueueBuilder.durable(WARNING_QUEUE_NAME).build();
+    }
+
+    @Bean
     public Binding confirmQueueBindingExchange(@Qualifier("confirmExchange") DirectExchange confirmExchange,
                                                @Qualifier("confirmQueue") Queue confirmQueue){
         return BindingBuilder.bind(confirmQueue).to(confirmExchange).with(CONFIRM_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding warningQueueBindingExchange(@Qualifier("warningExchange") FanoutExchange warningExchange,
+                                               @Qualifier("warningQueue") Queue warningQueue){
+        return BindingBuilder.bind(warningQueue).to(warningExchange);
     }
 
 }
