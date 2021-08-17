@@ -3,14 +3,13 @@ package com.jianghu.mq.rabbit.config;
 import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @description: 发布确认
  * @author: OF3848
  * @create: 2021-08-09 22:41
  */
-@Configuration
+//@Configuration
 public class ConfirmQueueConfig {
 
     public static final String CONFIRM_EXCHANGE_NAME = "confirm.exchange";

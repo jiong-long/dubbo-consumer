@@ -6,7 +6,6 @@ import org.springframework.amqp.core.CustomExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,7 @@ import java.util.Map;
  * @author: OF3848
  * @create: 2021-08-08 23:43
  */
-@Configuration
+//@Configuration
 public class DelayedQueueConfig {
 
     public static final String DELAYED_EXCHANGE_NAME = "delayed.exchange";

@@ -5,7 +5,6 @@ import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
@@ -16,7 +15,7 @@ import javax.annotation.PostConstruct;
  * @create: 2021-08-10 00:00
  */
 @Slf4j
-@Component
+//@Component
 public class MyConfirm implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnsCallback {
 
     @Autowired

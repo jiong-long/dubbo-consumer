@@ -1,6 +1,5 @@
 package com.jianghu.consumer;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.jianghu.api.ProviderService;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ public class ConsumerService {
      * loadbalance：负载均衡策略，roundrobin随机
      * version：多版本，*不区分版本
      */
-    @Reference(check = false, retries = 4, loadbalance = "roundrobin" , version = "*", mock = "true")
+    //@Reference(check = false, retries = 4, loadbalance = "roundrobin" , version = "*", mock = "true")
     private ProviderService providerService;
 
     public String initDubbo(String world){

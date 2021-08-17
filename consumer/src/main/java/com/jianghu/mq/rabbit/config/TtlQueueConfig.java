@@ -3,7 +3,6 @@ package com.jianghu.mq.rabbit.config;
 import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
  * @author: OF3848
  * @create: 2021-08-08 22:10
  */
-@Configuration
+//@Configuration
 public class TtlQueueConfig {
     // 普通交换机
     public static final String X_EXCHANGE = "X";
