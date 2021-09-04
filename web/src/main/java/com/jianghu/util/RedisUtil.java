@@ -2,13 +2,11 @@ package com.jianghu.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -83,6 +81,33 @@ public class RedisUtil {
         }
     }
 
+    /**
+     * 分布式锁--加锁
+     * @param key
+     * @param value
+     * @param second 过期时间，单位秒（设置为程序最长的执行时间）
+     *      防止加锁后程序崩溃，导致锁无法释放
+     * @return
+     */
+    public static Boolean lock(String key, String value, long second){
+        return redisTemplate.opsForValue().setIfAbsent(key, value, second, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 分布式锁--释放锁
+     * @param key
+     * @param value
+     *      A进程尚未执行完，过期自动释放锁，B进程获得锁后，A需要判断value值是否相等，不相等不能delete key
+     */
+    public static void unLock(String key, String value){
+        // A进程判断相等之后，delete key之前，过期自动释放锁，B进程获得锁后，A进程有可能删除B的锁，所以判断、删除要原子操作，使用lua脚本
+        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        // 设置lua脚本返回类型为Long
+        redisScript.setResultType(Long.class);
+        redisScript.setScriptText(script);
+        redisTemplate.execute(redisScript, Arrays.asList(key), value);
+    }
 
     // ============================String=============================
 
