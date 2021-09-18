@@ -12,7 +12,7 @@ import com.rabbitmq.client.DeliverCallback;
  */
 public class Subscribe {
 
-    private final static String EXCHANGE_NAME = "exchange_name";
+    private final static String EXCHANGE_NAME = "fanout_exchange_name";
 
     public static void main(String[] args) {
         // 接收消息，不可以直接关闭Channel
