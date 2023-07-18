@@ -1,7 +1,10 @@
 package com.jianghu.consumer;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.jianghu.api.ProviderService;
 import org.springframework.stereotype.Service;
+
+import java.time.ZonedDateTime;
 
 /**
  * @description:
@@ -17,10 +20,14 @@ public class ConsumerService {
      * loadbalance：负载均衡策略，roundrobin随机
      * version：多版本，*不区分版本
      */
-    //@Reference(check = false, retries = 4, loadbalance = "roundrobin" , version = "*", mock = "true")
+    @Reference(check = true, retries = 4, loadbalance = "roundrobin" , version = "*", mock = "false")
     private ProviderService providerService;
 
     public String initDubbo(String world){
         return providerService.sayHello(world);
+    }
+
+    public ZonedDateTime sayTime(){
+        return providerService.sayTime(ZonedDateTime.now());
     }
 }
