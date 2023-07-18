@@ -1,5 +1,6 @@
 package com.jianghu.web;
 
+import com.jianghu.api.Person;
 import com.jianghu.consumer.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,9 @@ public class DubboController {
     }
 
     @GetMapping(value = "/time")
-    public ZonedDateTime sayTime(){
-        return consumerService.sayTime();
+    public Person sayTime(){
+        Person person = new Person();
+        person.setBirthday(ZonedDateTime.now());
+        return consumerService.sayTime(person);
     }
 }
